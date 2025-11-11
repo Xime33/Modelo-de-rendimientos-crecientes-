@@ -31,12 +31,12 @@ with st.sidebar.expander("Precios y Costos"):
     w = st.number_input("Costo por trabajador (w)", value=100.0)
     P = st.number_input("Precio del producto (P)", value=50.0)
 
-# --- CÁLCULOS ---
+# 
 L_vals = np.linspace(1, L_max, 100)
 Q_vals = calcular_Q(x, L_vals, K, l, k)
 CT_vals, CM_vals, IT_vals, G_vals = calcular_costos_y_beneficios(Q_vals, L_vals, w, P)
 
-# --- TABLA DE RESULTADOS ---
+# 
 data = pd.DataFrame({
     'L': L_vals,
     'Producción (Q)': Q_vals,
@@ -49,7 +49,7 @@ data = pd.DataFrame({
 st.subheader("Resultados numéricos")
 st.dataframe(data.round(2))
 
-# --- GRÁFICAS ---
+#
 st.subheader("Curvas de Producción, Costos y Ganancias")
 
 fig, ax = plt.subplots(3, 1, figsize=(7, 12))
