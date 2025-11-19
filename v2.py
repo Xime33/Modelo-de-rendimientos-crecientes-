@@ -6,22 +6,22 @@ import pandas as pd
 st.title("Modelo de Rendimientos Crecientes, Decrecientes y Producción Exponencial")
 
 
-def calcular_Q(x, L, K, l, k):
-    return x * (L ** l) * (K ** k)
+def calcular_Q(A, L, K, l, k):
+    return A * (L ** l) * (K ** k)
 
 def calcular_costos(Q, L, costo_insumo):
     costo_total = costo_insumo * L
     costo_medio = np.divide(costo_total, Q, out=np.zeros_like(costo_total), where=Q!=0)
     return costo_total, costo_medio
 
-def calcular_exponencial(x, L, K, beta):
+def calcular_exponencial(A, L, K, beta):
     return x * np.exp(beta * L) * K
 
 
 
 with st.sidebar.expander("Parámetros de Producción"):
-    x = st.number_input("x (Productividad total)", value=10.0)
-    L_max = st.number_input("L (Trabajo máximo)", value=20.0)
+    x = st.number_input("x (Productividad total)", value=10)
+    L_max = st.number_input("L (Trabajo máximo)", value=10)
     K = st.number_input("K (Capital)", value=10.0)
 
 with st.sidebar.expander("Elasticidades"):
@@ -33,6 +33,7 @@ with st.sidebar.expander("Elasticidades"):
 with st.sidebar.expander("Costos e ingresos"):
     costo_insumo = st.number_input("Costo por unidad de trabajo (w)", value=100.0)
     precio = st.number_input("Precio del producto (P)", value=50.0)
+    
 
 L_vals = np.linspace(1, L_max, 50)
 
@@ -52,7 +53,7 @@ IT_vals = Q_crec * precio
 
 data = pd.DataFrame({
     "Trabajo (L)": L_vals,
-    "Producción Creciente (Q)": Q_crec,
+    "Q": Q_crec,
     "Producción Decreciente (Q)": Q_decr,
     "Producción Exponencial (Q)": Q_exp,
     "Costo Total (w·L)": CT_vals,
