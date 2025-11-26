@@ -5,25 +5,12 @@ from mpl_toolkits.mplot3d import Axes3D
 
 plt.style.use("seaborn-v0_8")  # Estilo general
 
-# ---------------------------------------------------------------------
-#                          INTERFAZ PRINCIPAL
-# ---------------------------------------------------------------------
 
-st.title("📈 Modelo Interactivo de Producción Cobb-Douglas")
+st.title("Modelo Interactivo de Producción Cobb-Douglas")
 
-st.markdown(
-    """
-    Esta herramienta permite visualizar:
-    - La producción total \( Q \)
-    - Producto marginal y medio del trabajo y del capital
-    - Superficie 3D de la producción
-    - Isocuantas (curvas de igual producción)
-    """
-)
 
-# ---------------------------------------------------------------------
-#                      PARÁMETROS GENERALES
-# ---------------------------------------------------------------------
+
+
 
 opcion = st.sidebar.selectbox(
     "Selecciona el modelo:",
@@ -40,9 +27,7 @@ if opcion == "Cobb-Douglas: Q = A · K^a · L^b":
         a = st.number_input("Elasticidad del Capital (a)", value=0.5, min_value=0.0)
         b = st.number_input("Elasticidad del Trabajo (b)", value=0.5, min_value=0.0)
 
-# ---------------------------------------------------------------------
-#                          FUNCIONES
-# ---------------------------------------------------------------------
+
 
 def produccion_cobb(A, K, L, a, b):
     return A * (K**a) * (L**b)
@@ -53,9 +38,7 @@ def pmgL_cobb(A, K, L, a, b):
 def pmgK_cobb(A, K, L, a, b):
     return A * a * (K**(a-1)) * (L**b)
 
-# ---------------------------------------------------------------------
-#                     CÁLCULOS PARA LOS RESULTADOS
-# ---------------------------------------------------------------------
+
 
 if opcion == "Cobb-Douglas: Q = A · K^a · L^b":
 
@@ -66,7 +49,7 @@ if opcion == "Cobb-Douglas: Q = A · K^a · L^b":
     PMe_L = Q / L
     PMe_K = Q / K
 
-    st.subheader("📊 Resultados de la Producción")
+    st.subheader(" Resultados de la Producción")
 
     col1, col2, col3 = st.columns(3)
     col1.metric("Producción total (Q)", f"{Q:.4f}")
@@ -77,11 +60,9 @@ if opcion == "Cobb-Douglas: Q = A · K^a · L^b":
     col4.metric("PMe del Trabajo (PMe_L)", f"{PMe_L:.4f}")
     col5.metric("PMe del Capital (PMe_K)", f"{PMe_K:.4f}")
 
-    # -----------------------------------------------------------------
-    #                   GRÁFICAS 2D – TRABAJO
-    # -----------------------------------------------------------------
 
-    st.subheader("📈 Gráficas del Trabajo (L) con Capital fijo")
+
+    st.subheader("Gráficas del Trabajo (L)")
 
     L_vals = np.linspace(1, L * 3, 100)
     Q_vals = produccion_cobb(A, K, L_vals, a, b)
@@ -91,7 +72,7 @@ if opcion == "Cobb-Douglas: Q = A · K^a · L^b":
     # Producción Q(L)
     fig1, ax1 = plt.subplots()
     ax1.plot(L_vals, Q_vals)
-    ax1.set_title("Producción Q(L) con K fijo")
+    ax1.set_title("Producción Q(L)")
     ax1.set_xlabel("Trabajo (L)")
     ax1.set_ylabel("Producción (Q)")
     ax1.grid(True)
@@ -115,11 +96,9 @@ if opcion == "Cobb-Douglas: Q = A · K^a · L^b":
     ax3.grid(True)
     st.pyplot(fig3)
 
-    # -----------------------------------------------------------------
-    #                   GRÁFICAS 2D – CAPITAL
-    # -----------------------------------------------------------------
 
-    st.subheader("📈 Gráficas del Capital (K) con Trabajo fijo")
+
+    st.subheader(" Gráficas del Capital (K) ")
 
     K_vals_plot = np.linspace(1, K * 3, 100)
     Q_K_vals = produccion_cobb(A, K_vals_plot, L, a, b)
@@ -153,11 +132,9 @@ if opcion == "Cobb-Douglas: Q = A · K^a · L^b":
     axPMeK.grid(True)
     st.pyplot(figPMeK)
 
-    # -----------------------------------------------------------------
-    #                      SUPERFICIE 3D – COBB-DOUGLAS
-    # -----------------------------------------------------------------
 
-    st.subheader("🧩 Superficie 3D de la Función de Producción")
+
+    st.subheader("Superficie 3D de la Función de Producción")
 
     K_vals3 = np.linspace(1, K * 3, 40)
     L_vals3 = np.linspace(1, L * 3, 40)
@@ -174,11 +151,9 @@ if opcion == "Cobb-Douglas: Q = A · K^a · L^b":
 
     st.pyplot(fig4)
 
-    # -----------------------------------------------------------------
-    #                          ISOQUANTAS
-    # -----------------------------------------------------------------
+ 
 
-    st.subheader("🔵 Isocuantas de la Función de Producción")
+    st.subheader(" Isocuantas de la Función de Producción")
 
     K_range = np.linspace(1, K * 3, 50)
     L_range = np.linspace(1, L * 3, 50)
