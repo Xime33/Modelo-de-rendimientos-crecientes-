@@ -108,7 +108,7 @@ if opcion == "Cobb-Douglas: Q = A · K^a · L^b":
     # Producción Q(K)
     figK, axK = plt.subplots()
     axK.plot(K_vals_plot, Q_K_vals, color="purple")
-    axK.set_title("Producción Q(K) con L fijo")
+    axK.set_title("Producción Q(K)")
     axK.set_xlabel("Capital (K)")
     axK.set_ylabel("Producción (Q)")
     axK.grid(True)
