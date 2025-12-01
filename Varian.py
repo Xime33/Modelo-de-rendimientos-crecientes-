@@ -2,153 +2,226 @@ import streamlit as st
 import numpy as np
 import matplotlib.pyplot as plt
 
+
+
+# ESTILO GLOBAL VARIAN
+
+def estilo_varian():
+    plt.rcParams['axes.edgecolor'] = 'black'
+    plt.rcParams['axes.linewidth'] = 1.2
+    plt.rcParams['font.size'] = 14
+    plt.rcParams['font.family'] = 'serif'
+    plt.rcParams['figure.figsize'] = (6, 4)
+    plt.rcParams['axes.grid'] = False
+
+
 st.title("Gráficas Capítulos 16–19 (Varian)")
 
 
-# FUNCIÓN DE PRODUCCIÓN
+
+# 1) FUNCIÓN DE PRODUCCIÓN
 
 
-st.header("1. Función de producción (Cap. 16)")
+st.header("1. Función de Producción ")
+estilo_varian()
 
-L = np.linspace(0, 20, 200)
-A = 10
-b = 0.6   # rendimientos decrecientes
+with st.sidebar.expander("Parámetros Gráfica 1"):
+    A = st.number_input("A (Productividad total)", value=10.0)
+    b = st.number_input("b (Elasticidad)", value=0.6)
+    Lmax = st.slider("Máximo de L", 10, 50, 20)
+
+L = np.linspace(0, Lmax, 200)
 Y = A * (L ** b)
 
 fig1, ax1 = plt.subplots()
-ax1.plot(L, Y, linewidth=2)
+ax1.plot(L, Y, color="black")
 ax1.set_xlabel("Trabajo (L)")
 ax1.set_ylabel("Producto (Y)")
-ax1.set_title("Función de Producción – Producto Total")
-ax1.grid(True)
-
+ax1.spines["right"].set_visible(False)
+ax1.spines["top"].set_visible(False)
 st.pyplot(fig1)
 
 
-# DEMANDA DE TRABAJO – VPM
 
 
-st.header("2. Demanda de trabajo (Cap. 17) – VPM y salario")
+# 2) DEMANDA DE TRABAJO – VPM (Gráfica 6)
 
-L = np.linspace(1, 20, 200)
-precio = 10
 
-PMg1 = 15 / L          # productividad marginal "alta"
-PMg2 = 10 / L          # productividad marginal más baja
-VPM1 = precio * PMg1
-VPM2 = precio * PMg2
+st.header("2. Demanda de trabajo  – Gráfica 6")
+estilo_varian()
 
-W1 = 25
-W2 = 10
+with st.sidebar.expander("Parámetros Gráfica 2"):
+    m = st.number_input("Pendiente (negativa)", value=-0.6)
+    b1 = st.number_input("Intercepto VPM1", value=18.0)
+    b2 = st.number_input("Intercepto VPM2", value=16.0)
+    W1 = st.number_input("Salario W1", value=12.0)
+    W2 = st.number_input("Salario W2", value=8.0)
+    Lmax2 = st.slider("Máximo del eje de empleo", 10, 50, 25)
+
+L = np.linspace(0, Lmax2, 200)
+VPM1 = m * L + b1
+VPM2 = m * L + b2
+
+E1 = (b1 - W1) / (-m)
+E2 = (b2 - W2) / (-m)
 
 fig2, ax2 = plt.subplots()
-ax2.plot(L, VPM1, label="VPM1", linewidth=2)
-ax2.plot(L, VPM2, label="VPM2", linewidth=2)
-ax2.axhline(W1, color="gray", linestyle="--", label="W1")
-ax2.axhline(W2, color="black", linestyle="--", label="W2")
-ax2.set_xlabel("Empleo")
-ax2.set_ylabel("Salario / VPM")
-ax2.set_title("Demanda de trabajo según VPM")
-ax2.legend()
-ax2.grid(True)
+ax2.plot(L, VPM1, linewidth=1.4, color="black")
+ax2.plot(L, VPM2, linewidth=1.4, color="black")
 
+ax2.axhline(W1, color="black")
+ax2.axhline(W2, color="black")
+ax2.vlines(E1, 0, W1, color="black")
+ax2.vlines(E2, 0, W2, color="black")
+
+ax2.text(0.5, W1+0.3, "W1")
+ax2.text(0.5, W2+0.3, "W2")
+ax2.text(E1, -0.7, "E1", ha="center")
+ax2.text(E2, -0.7, "E2", ha="center")
+ax2.set_xlabel("Empleo")
+ax2.set_ylabel("Salario")
+ax2.spines["top"].set_visible(False)
+ax2.spines["right"].set_visible(False)
 st.pyplot(fig2)
 
 
-# COSTO FIJO MEDIO – CFM
 
 
-st.header("3. Costo Fijo Medio – Gráfica 7")
+# 3) CFM
 
-y = np.linspace(1, 50, 200)
-F = 200
-CFM = F / y
+
+st.header("3. Gráfica 7 – Costo Fijo Medio")
+estilo_varian()
+
+with st.sidebar.expander("Parámetros Gráfica 3"):
+    CF = st.number_input("Costo Fijo (CF)", value=200.0)
+    ymax = st.slider("Máximo de y", 20, 200, 50)
+
+y = np.linspace(1, ymax, 200)
+CFM = CF / y
 
 fig3, ax3 = plt.subplots()
-ax3.plot(y, CFM, linewidth=2)
-ax3.set_xlabel("Producción (y)")
+ax3.plot(y, CFM, color="black")
+ax3.text(y[-1], CFM[-1], "CFM")
+ax3.set_xlabel("y")
 ax3.set_ylabel("CFM")
-ax3.set_title("Costo Fijo Medio")
-ax3.grid(True)
-
+ax3.spines["top"].set_visible(False)
+ax3.spines["right"].set_visible(False)
 st.pyplot(fig3)
 
 
-# CVM con capacidad máxima – Gráfica 8
 
 
-st.header("4. Costo Variable Medio con capacidad máxima – Gráfica 8")
+# 4) CVM – Máxima capacidad
 
-y = np.linspace(1, 50, 200)
+
+st.header("4. Gráfica 8 – CVM con Máxima Capacidad")
+estilo_varian()
+
+with st.sidebar.expander("Parámetros Gráfica 4"):
+    costo_base = st.number_input("Costo base", value=20.0)
+    capacidad = st.slider("Máxima Capacidad", 10, 80, 40)
+    potencia = st.slider("Exponente", 1, 3, 2)
+
+y = np.linspace(1, 60, 300)
 CVM = np.piecewise(
     y,
-    [y < 30, y >= 30],
-    [lambda y: 20*np.ones_like(y), 
-     lambda y: 20 + 2*(y - 30) ** 2]
+    [y < capacidad, y >= capacidad],
+    [
+        lambda y: costo_base * np.ones_like(y),
+        lambda y: costo_base + 0.5 * (y - capacidad)**potencia
+    ]
 )
 
 fig4, ax4 = plt.subplots()
-ax4.plot(y, CVM, linewidth=2)
-ax4.axvline(30, color="black", linestyle="--")
-ax4.text(30, 22, "Máxima capacidad", rotation=90)
+ax4.plot(y, CVM, color="black")
+ax4.axvline(capacidad, color="black")
+ax4.text(capacidad+1, costo_base-1, "Máxima\ncapacidad")
 ax4.set_xlabel("y")
 ax4.set_ylabel("CVM")
-ax4.set_title("Costo Variable Medio con capacidad máxima")
-ax4.grid(True)
-
+ax4.spines["top"].set_visible(False)
+ax4.spines["right"].set_visible(False)
 st.pyplot(fig4)
 
 
-#  CVMe tradicional – Gráfica 9
 
 
-st.header("5. CVMe tradicional – Gráfica 9")
+# 5) CVMe (U)
 
-y = np.linspace(1, 50, 200)
-CVMe = 0.02*(y-20)**2 + 10
+
+st.header("5. Gráfica 9 – CVMe")
+estilo_varian()
+
+with st.sidebar.expander("Parámetros Gráfica 5"):
+    a = st.number_input("Constante base", value=8.0)
+    c = st.number_input("Pendiente cuadrática", value=0.015)
+
+y = np.linspace(1, 60, 300)
+CVMe = a + c * (y - 20)**2
 
 fig5, ax5 = plt.subplots()
-ax5.plot(y, CVMe, linewidth=2)
+ax5.plot(y, CVMe, color="black")
+ax5.text(55, CVMe[-1], "CVMe")
 ax5.set_xlabel("y")
-ax5.set_ylabel("CVMe")
-ax5.set_title("Costo Variable Medio (forma de U)")
-ax5.grid(True)
-
+ax5.set_ylabel("CMe")
+ax5.spines["top"].set_visible(False)
+ax5.spines["right"].set_visible(False)
 st.pyplot(fig5)
 
 
-#  Costo Medio – Gráfica 10
 
 
-st.header("6. Costo Medio – Gráfica 10")
+# 6) CMe – U pronunciada
 
-CMe = 0.02*(y-20)**2 + 15
+
+st.header("6. Gráfica 10 – CMe (Curva en U)")
+estilo_varian()
+
+with st.sidebar.expander("Parámetros Gráfica 6"):
+    c0 = st.number_input("Nivel base", value=10.0)
+    c2 = st.number_input("Coeficiente cuadrático", value=0.02)
+
+y = np.linspace(1, 60, 300)
+CMe = c0 + c2*(y - 30)**2
 
 fig6, ax6 = plt.subplots()
-ax6.plot(y, CMe, linewidth=2)
+ax6.plot(y, CMe, color="black")
+ax6.text(55, CMe[-1], "CMe")
 ax6.set_xlabel("y")
 ax6.set_ylabel("CMe")
-ax6.set_title("Costo Medio con forma de U")
-ax6.grid(True)
-
+ax6.spines["top"].set_visible(False)
+ax6.spines["right"].set_visible(False)
 st.pyplot(fig6)
 
 
-# 7) CM + CVMe – Gráfica 11
 
 
-st.header("7. Costo Medio (CM) y Costo Variable Medio (CVMe) – Gráfica 11")
+# 7) CM + CVMe (Gráfica 11)
 
-CMe2 = 0.02*(y-20)**2 + 15
-CVMe2 = 0.03*(y-20)**2 + 10
+
+st.header("7. Gráfica 11 – CM y CVMe")
+estilo_varian()
+
+with st.sidebar.expander("Parámetros Gráfica 7"):
+    cCM = st.number_input("CM — parámetro cuadrático", value=0.015)
+    cCV = st.number_input("CVMe — parámetro cuadrático", value=0.008)
+    shift_CM = st.number_input("Desplazamiento CM", value=28)
+    shift_CV = st.number_input("Desplazamiento CVMe", value=38)
+
+y = np.linspace(1, 60, 300)
+CM = cCM*(y - shift_CM)**2 + 8
+CVMe = cCV*(y - shift_CV)**2 + 9
 
 fig7, ax7 = plt.subplots()
-ax7.plot(y, CMe2, label="CM", linewidth=2)
-ax7.plot(y, CVMe2, label="CVMe", linewidth=2)
-ax7.set_xlabel("y")
-ax7.set_ylabel("Coste")
-ax7.set_title("CM y CVMe (Gráfica 11)")
-ax7.legend()
-ax7.grid(True)
+ax7.plot(y, CM, color="black")
+ax7.plot(y, CVMe, color="black")
+ax7.text(40, CM[200], "CM")
+ax7.text(48, CVMe[-1], "CVMe")
 
+ax7.set_xlabel("y")
+ax7.set_ylabel("Costos")
+ax7.spines["top"].set_visible(False)
+ax7.spines["right"].set_visible(False)
 st.pyplot(fig7)
+
+
